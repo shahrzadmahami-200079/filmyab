@@ -39,7 +39,7 @@ public class newFragment extends Fragment implements RecyclerAdapter.OnItemClick
 
     RecyclerAdapter recyclerAdapter;
     RecyclerView recyclerView;
-    List<ModelItem> listnew;
+    List<ModelItem> listnew=new ArrayList<>();
     String URL;
     String RESULT_URL;
     String URL_Image = "https://image.tmdb.org/t/p/w500";
@@ -47,7 +47,7 @@ public class newFragment extends Fragment implements RecyclerAdapter.OnItemClick
     String API_KEY = "?api_key=428d813822be63eb8b0974061d27d530";
     private RequestQueue requestQueue;
 
-   private ImageView imageView;
+  // private ImageView imageView;
 
 
 
@@ -73,11 +73,12 @@ public class newFragment extends Fragment implements RecyclerAdapter.OnItemClick
     public void showRecyclerView() {
         recyclerAdapter = new RecyclerAdapter(getActivity(), listnew);
         recyclerView.setAdapter(recyclerAdapter);
+        recyclerAdapter.setOnItemClickListener(this);
     }
 
 
     public void getData() {
-        listnew = new ArrayList<>();
+       // listnew = new ArrayList<>();
         RESULT_URL = "now_playing";
         URL = BASE_URL + RESULT_URL + API_KEY;
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, URL, null, new Response.Listener<JSONObject>() {
@@ -107,14 +108,13 @@ public class newFragment extends Fragment implements RecyclerAdapter.OnItemClick
 
     }
     @Override
-            public void onItemClick(int position) {
+        public void onItemClick(int position) {
         Intent detailIntent = new Intent(getActivity(),DetailsActivity.class);
         ModelItem clickedItem = listnew.get(position);
         detailIntent.putExtra("title", clickedItem.getNameMovie());
         detailIntent.putExtra("backdrop_path", clickedItem.getPicture());
         detailIntent.putExtra("overview", clickedItem.getDescription());
         startActivity(detailIntent);
-
     }
 
 }

@@ -7,15 +7,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 
 import java.util.List;
 
+
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHolder> {
-    List<ModelItem> requestItems;
-    Context context;
+    List<ModelItem> mRequestItems;
+    Context mContext;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener {
@@ -30,8 +33,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
 
     public RecyclerAdapter(Context context, List<ModelItem> requestItems) {
-        this.context = context;
-        this.requestItems = requestItems;
+        mContext = context;
+        mRequestItems = requestItems;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -39,7 +42,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
         TextView textView;
         ImageView imageView;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.itemTextView);
             imageView = itemView.findViewById(R.id.imageview);
@@ -47,6 +50,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    if (mListener != null) {
+                        int pos = getAdapterPosition();
+                        if (pos != RecyclerView.NO_POSITION) {
+                            mListener.onItemClick(pos);
+                        }
+                    }
 
                 }
             });
@@ -55,7 +64,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public RecyclerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.cardview_popular,
+        View view = LayoutInflater.from(mContext).inflate(R.layout.cardview_popular,
                 parent, false);
         return new ViewHolder(view);
 
@@ -63,8 +72,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.textView.setText(requestItems.get(position).getNameMovie());
-        Glide.with(context).load(requestItems.get(position).getPicture()).into(holder.imageView);
+        holder.textView.setText(mRequestItems.get(position).getNameMovie());
+        Glide.with(mContext).load(mRequestItems.get(position).getPicture()).into(holder.imageView);
     }
 
 
@@ -73,6 +82,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return requestItems.size();
+
+        return mRequestItems.size();
     }
 }

@@ -1,6 +1,7 @@
 package com.example.filmyab.ui.popularMovie;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.filmyab.DetailsActivity;
 import com.example.filmyab.ModelItem;
 import com.example.filmyab.R;
 import com.example.filmyab.RecyclerAdapter;
@@ -34,7 +36,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class popularFragment extends Fragment {
+public class popularFragment extends Fragment implements RecyclerAdapter.OnItemClickListener{
 
     RecyclerView recyclerView;
     RecyclerAdapter recyclerAdapter;
@@ -63,6 +65,7 @@ public class popularFragment extends Fragment {
     public void showRecyclerView() {
         recyclerAdapter = new RecyclerAdapter(getActivity(), listpopular);
         recyclerView.setAdapter(recyclerAdapter);
+        recyclerAdapter.setOnItemClickListener(this);
     }
 
 
@@ -95,9 +98,16 @@ public class popularFragment extends Fragment {
             }
         });
         requestQueue.add(jsonObjectRequest);
-//        listpopular.add(new ModelItem("title 1", "overview", "URL_Image + backdrop_path + API_KEY"));
-//        listpopular.add(new ModelItem("title 2", "overview", "URL_Image + backdrop_path + API_KEY"));
-//        listpopular.add(new ModelItem("title 3", "overview", "URL_Image + backdrop_path + API_KEY"));
-//        showRecyclerView();
+
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        Intent detailIntent = new Intent(getActivity(), DetailsActivity.class);
+        ModelItem clickedItem = listpopular.get(position);
+        detailIntent.putExtra("title", clickedItem.getNameMovie());
+        detailIntent.putExtra("backdrop_path", clickedItem.getPicture());
+        detailIntent.putExtra("overview", clickedItem.getDescription());
+        startActivity(detailIntent);
     }
 }
